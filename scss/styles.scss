@@ -1,0 +1,29 @@
+:root {
+  // KOLORY
+  --yellow: #ffb62d;
+
+  // FONTY
+  --font: 'Open Sans', sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  font-size: 10px;
+}
+
+body {
+  align-items: center;
+  background: url('../img/background.jpg') no-repeat;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-height: 100vh;
+}
+
+@import 'normalize';
+@import 'main';

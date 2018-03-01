@@ -1,0 +1,25 @@
+.title {
+  color: var(--yellow);
+  font-family: var(--font);
+  font-size: 5rem;
+  font-weight: 800;
+  margin: 0;
+  padding: 5rem 0;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%;
+  &::before, &::after {
+    background: var(--yellow);
+    content: '';
+    height: 5.7rem;
+    position: absolute;
+    width: 30%;
+  }
+  &::before {
+    left: 0;
+  }
+  &::after {
+    right: 0;
+  }
+}
