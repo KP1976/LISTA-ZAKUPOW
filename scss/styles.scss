@@ -4,6 +4,7 @@
 
   // FONTY
   --font: 'Open Sans', sans-serif;
+  --font2: 'Pacifico', cursive;
 }
 
 *, *::before, *::after {
@@ -14,16 +15,17 @@ html, body {
   font-size: 10px;
 }
 
-body {
+.whole-container {
   align-items: center;
   background: url('../img/background.jpg') no-repeat;
   background-repeat: no-repeat;
   background-size: cover;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  max-height: 100vh;
+  min-height: 100vh;
 }
 
 @import 'normalize';
+@import 'mixins';
 @import 'main';
+@import 'add-products';

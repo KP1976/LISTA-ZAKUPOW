@@ -1,6 +1,7 @@
 :root {
   --yellow: #ffb62d;
   --font: 'Open Sans', sans-serif;
+  --font2: 'Pacifico', cursive;
 }
 
 *, *::before, *::after {
@@ -12,7 +13,7 @@ html, body {
   font-size: 10px;
 }
 
-body {
+.whole-container {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -26,8 +27,7 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  height: 100vh;
-  max-height: 100vh;
+  min-height: 100vh;
 }
 
 /*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */
@@ -369,10 +369,10 @@ template {
 .title {
   color: var(--yellow);
   font-family: var(--font);
-  font-size: 5rem;
+  font-size: 6.5vw;
   font-weight: 800;
   margin: 0;
-  padding: 5rem 0;
+  padding: 3rem 0;
   position: relative;
   text-align: center;
   text-transform: uppercase;
@@ -381,13 +381,247 @@ template {
 .title::before, .title::after {
   background: var(--yellow);
   content: '';
-  height: 5.7rem;
+  height: 7.5vw;
   position: absolute;
-  width: 30%;
+  width: 20vw;
 }
 .title::before {
   left: 0;
 }
 .title::after {
   right: 0;
+}
+@media screen and (min-width: 992px) {
+  .title {
+    font-size: 6rem;
+  }
+  .title::before, .title::after {
+    height: 7rem;
+    width: 20%;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .title::before, .title::after {
+    height: 7rem;
+    width: 28%;
+  }
+}
+
+.container {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border: 1px dashed #fff;
+  border-radius: 0.5rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-bottom: 2rem;
+  max-width: 70rem;
+  padding: 2rem;
+  width: 90%;
+}
+@media screen and (min-width: 768px) {
+  .container {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+  }
+}
+
+.container-list-products {
+  display: grid;
+  grid-row-gap: 1rem;
+  padding: 0;
+  width: 100%;
+}
+
+.list-product {
+  border-bottom: 1px dotted #fff;
+  list-style-type: none;
+}
+
+.list-product-name, .list-product-price {
+  color: #fff;
+  font-family: var(--font2);
+  font-size: 1.6rem;
+  line-height: 1.3;
+  text-align: center;
+}
+@media screen and (min-width: 992px) {
+  .list-product-name, .list-product-price {
+    font-size: 1.8rem;
+  }
+}
+
+.product-modify-btn {
+  background: transparent;
+  border: none;
+  color: var(--yellow);
+  cursor: pointer;
+  float: right;
+  font-size: 1.6rem;
+  padding: 0;
+}
+
+.summary-price-container {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.summary-price-text, .summary-price {
+  font-family: var(--font);
+  font-size: 2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+@media screen and (min-width: 768px) {
+  .summary-price-text, .summary-price {
+    font-size: 3.5rem;
+  }
+}
+
+.summary-price-text {
+  color: var(--yellow);
+  margin-right: 1rem;
+}
+
+.summary-price {
+  color: #fff;
+}
+
+.buttons {
+  display: grid;
+  grid-row-gap: 1rem;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-bottom: 2rem;
+  width: 90%;
+}
+@media screen and (min-width: 768px) {
+  .buttons {
+    grid-column-gap: 2rem;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 70rem;
+  }
+}
+
+.btn {
+  background: var(--yellow);
+  border: 1px solid var(--yellow);
+  border-radius: 0.5rem;
+  color: #000;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 1.6rem;
+  font-weight: 800;
+  outline: none;
+  padding: 1rem;
+  text-transform: uppercase;
+  -webkit-transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  width: 20rem;
+}
+.btn:hover {
+  background-color: transparent;
+  color: var(--yellow);
+}
+
+@media screen and (min-width: 768px) {
+  .btn-add {
+    width: 95%;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .btn-modify {
+    width: 100%;
+  }
+}
+
+.subtitle {
+  color: var(--yellow);
+  font-family: var(--font);
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.product-name-wrapper, .product-price-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+}
+
+.product-name-wrapper {
+  margin: 2rem 0;
+}
+@media screen and (min-width: 768px) {
+  .product-name-wrapper {
+    width: 60%;
+  }
+}
+
+.product-price-wrapper {
+  margin-bottom: 2rem;
+}
+@media screen and (min-width: 768px) {
+  .product-price-wrapper {
+    width: 30%;
+    margin: 2rem 0;
+  }
+}
+
+.product-label {
+  color: var(--yellow);
+  font-family: var(--font2);
+  font-size: 1.6rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+@media screen and (min-width: 992px) {
+  .product-label {
+    font-size: 1.8rem;
+  }
+}
+
+.product-input {
+  border: none;
+  border-radius: 0.5rem;
+  font-family: var(--font);
+  font-size: 1.6rem;
+  font-weight: 400;
+  outline: none;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+.product-input:focus {
+  -webkit-box-shadow: 0 0 1px 1px var(--yellow);
+          box-shadow: 0 0 1px 1px var(--yellow);
 }

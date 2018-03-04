@@ -1,0 +1,100 @@
+.buttons {
+  display: grid;
+  grid-row-gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  width: 90%;
+  @include mq(768px) {
+    grid-column-gap: 2rem;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 70rem;
+  }
+}
+
+.btn {
+  background: var(--yellow);
+  border: 1px solid var(--yellow);
+  border-radius: 0.5rem;
+  color: #000;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 1.6rem;
+  font-weight: 800;
+  outline: none;
+  padding: 1rem;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  width: 20rem;
+  &:hover {
+    background-color: transparent;
+    color: var(--yellow);
+  }
+}
+
+.btn-add {
+  @include mq(768px) {
+    width: 95%;
+  }
+}
+
+.btn-modify {
+  @include mq(768px) {
+    width: 100%;
+  }
+}
+
+.subtitle {
+  color: var(--yellow);
+  font-family: var(--font);
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.product-name-wrapper, .product-price-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.product-name-wrapper {
+  margin: 2rem 0;
+  @include mq(768px) {
+    width: 60%;
+  }
+}
+
+.product-price-wrapper {
+  margin-bottom: 2rem;
+  @include mq(768px) {
+    width: 30%;
+    margin: 2rem 0;
+  }
+}
+
+.product-label {
+  color: var(--yellow);
+  font-family: var(--font2);
+  font-size: 1.6rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  @include mq(992px) {
+    font-size: 1.8rem;   
+  }
+}
+
+.product-input {
+  border: none;
+  border-radius: 0.5rem;
+  font-family: var(--font);
+  font-size: 1.6rem;
+  font-weight: 400;
+  outline: none;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  &:focus {
+    box-shadow: 0 0 1px 1px var(--yellow);
+  }
+}

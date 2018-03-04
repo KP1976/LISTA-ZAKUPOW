@@ -1,10 +1,10 @@
 .title {
   color: var(--yellow);
   font-family: var(--font);
-  font-size: 5rem;
+  font-size: 6.5vw;
   font-weight: 800;
   margin: 0;
-  padding: 5rem 0;
+  padding: 3rem 0;
   position: relative;
   text-align: center;
   text-transform: uppercase;
@@ -12,9 +12,9 @@
   &::before, &::after {
     background: var(--yellow);
     content: '';
-    height: 5.7rem;
+    height: 7.5vw;
     position: absolute;
-    width: 30%;
+    width: 20vw;
   }
   &::before {
     left: 0;
@@ -22,4 +22,94 @@
   &::after {
     right: 0;
   }
+  @include mq(992px) {
+    font-size: 6rem;
+    &::before, &::after {
+      height: 7rem;
+      width: 20%;
+    }
+  }
+  @include mq(1200px) {
+    &::before, &::after {
+      height: 7rem;
+      width: 28%;
+    }
+  }
+}
+
+.container {
+  align-items: center;
+  border: 1px dashed #fff;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+  max-width: 70rem;
+  padding: 2rem;
+  width: 90%;
+  @include mq(768px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+}
+
+.container-list-products {
+  display: grid;
+  grid-row-gap: 1rem;
+  padding: 0;
+  width: 100%;
+}
+
+.list-product {
+  border-bottom: 1px dotted #fff;
+  list-style-type: none;
+}
+
+.list-product-name, .list-product-price {
+  color: #fff;
+  font-family: var(--font2);
+  font-size: 1.6rem;
+  line-height: 1.3;
+  text-align: center;
+  @include mq(992px) {
+    font-size: 1.8rem;   
+  }
+}
+
+.product-modify-btn {
+  background: transparent;
+  border: none;
+  color: var(--yellow);
+  cursor: pointer;
+  float: right;
+  font-size: 1.6rem;
+  padding: 0;
+}
+
+.summary-price-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.summary-price-text, .summary-price {
+  font-family: var(--font);
+  font-size: 2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  @include mq(768px) {
+    font-size: 3.5rem;   
+  }
+}
+
+.summary-price-text {
+  color: var(--yellow);
+  margin-right: 1rem;
+}
+
+.summary-price {
+  color: #fff;
 }
