@@ -1,5 +1,5 @@
 .buttons {
-  display: grid;
+  display: none;
   grid-row-gap: 1rem;
   justify-content: center;
   margin-bottom: 2rem;
@@ -8,6 +8,9 @@
     grid-column-gap: 2rem;
     grid-template-columns: repeat(3, 1fr);
     max-width: 70rem;
+  }
+  &.show-buttons {
+    display: grid
   }
 }
 
@@ -79,6 +82,7 @@
   font-family: var(--font2);
   font-size: 1.6rem;
   font-weight: 400;
+  letter-spacing: 0.2rem;
   margin-bottom: 1rem;
   @include mq(992px) {
     font-size: 1.8rem;   

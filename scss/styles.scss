@@ -13,6 +13,8 @@
 
 html, body {
   font-size: 10px;
+  margin: 0;
+  padding: 0;
 }
 
 .whole-container {
@@ -25,7 +27,6 @@ html, body {
   min-height: 100vh;
 }
 
-@import 'normalize';
 @import 'mixins';
 @import 'main';
 @import 'add-products';
