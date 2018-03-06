@@ -8,7 +8,7 @@ const App = (_=> {
   }
 
   const data = {
-    products: [],
+    products: Storage.getProductsFromLocalStorage(),
     currentProduct: null,
     totalPrice: 0
   };
@@ -17,18 +17,19 @@ const App = (_=> {
     const prodName = vars.productName.value;
     const prodPrice = vars.productPrice.value;
 
-    if(prodName !== '' || vars.productPrice.value !== '') {
+    if(prodName !== '' || prodPrice !== '') {
       const newProduct = createProduct(prodName, prodPrice);
 
       data.totalPrice += parseFloat(newProduct.productPrice);
-      showSumPrice(data.totalPrice);
       showProduct(newProduct);
+      showSumPrice(data.totalPrice);
 
       vars.productName.value = '';
       vars.productPrice.value = '';
 
+      products = new Storage(data.products);
+      products.addProduct();
     }
-    console.log(data.products);
   }
 
   function createProduct(prodName, prodPrice) {
@@ -47,7 +48,7 @@ const App = (_=> {
 
   function showProduct(newProduct) {
     const listProduct = document.createElement('li');
-    
+
     vars.containerDisplayProducts.classList.add('visible', 'animated', 'rubberBand');
     listProduct.classList.add('list-product');
     listProduct.innerHTML = `
@@ -57,6 +58,15 @@ const App = (_=> {
     `;
 
     vars.containerListProducts.appendChild(listProduct);
+  }
+
+  function displayProductsFromLocalStorage(products) {
+    products.forEach(product => {
+      showProduct(product);
+      data.totalPrice += parseFloat(product.productPrice); 
+    });
+    console.log(parseFloat(data.totalPrice.toFixed(2)));
+    showSumPrice(parseFloat(data.totalPrice.toFixed(2)));
   }
 
   function showSumPrice(totalPrice) {
@@ -92,9 +102,11 @@ const App = (_=> {
   function init(_vars) {
     vars = _vars;
 
+    displayProductsFromLocalStorage(data.products);
     vars.addBtn.addEventListener('click', productAddSubmit);
     vars.containerDisplayProducts.addEventListener('click', modifyProduct);
     // vars.wholeContainer.addEventListener('click', animCogStop);
+
   }
 
   return {
