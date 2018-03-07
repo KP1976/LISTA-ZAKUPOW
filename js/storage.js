@@ -3,7 +3,7 @@ class Storage {
     this.product = product;
   }
 
-  addProduct() {
+  addProductToLocalStorage() {
     localStorage.setItem('products', JSON.stringify(this.product));
   }
 

@@ -13,6 +13,7 @@ html, body {
   font-size: 10px;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .whole-container {
@@ -233,6 +234,80 @@ html, body {
   display: grid;
 }
 
+.btn-modify {
+  -webkit-animation-name: button-transform;
+          animation-name: button-transform;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+  -webkit-animation-duration: .5s;
+          animation-duration: .5s;
+  -webkit-transition: all 1s ease-in-out;
+  transition: all 1s ease-in-out;
+  -webkit-transform: translateX(-2000px);
+          transform: translateX(-2000px);
+}
+
+.btn-remove {
+  -webkit-animation-name: button-grow;
+          animation-name: button-grow;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+  -webkit-animation-duration: .5s;
+          animation-duration: .5s;
+}
+
+.btn-back {
+  -webkit-animation-name: button-transform;
+          animation-name: button-transform;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+  -webkit-animation-duration: .5s;
+          animation-duration: .5s;
+  -webkit-transform: translateX(2000px);
+          transform: translateX(2000px);
+}
+
+@-webkit-keyframes button-transform {
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+}
+
+@keyframes button-transform {
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+}
+@-webkit-keyframes button-grow {
+  0% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  50% {
+    -webkit-transform: scale(1.2);
+            transform: scale(1.2);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+@keyframes button-grow {
+  0% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  50% {
+    -webkit-transform: scale(1.2);
+            transform: scale(1.2);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
 .btn {
   background: var(--yellow);
   border: 1px solid var(--yellow);
@@ -252,6 +327,11 @@ html, body {
 .btn:hover {
   background-color: transparent;
   color: var(--yellow);
+}
+@media screen and (min-width: 768px) {
+  .btn {
+    width: auto;
+  }
 }
 
 @media screen and (min-width: 768px) {

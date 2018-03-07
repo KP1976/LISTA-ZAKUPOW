@@ -20,3 +20,8 @@
     justify-content: space-around;
   }
 }
+
+@mixin anim {
+  animation-fill-mode: forwards;
+  animation-duration: .5s;
+}
