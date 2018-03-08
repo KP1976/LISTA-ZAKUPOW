@@ -81,6 +81,9 @@
   font-size: 1.6rem;
   outline: none;
   padding: 0;
+  &.disable-pointer-event {
+    pointer-events: none;
+  }
 }
 
 .summary-price-container {

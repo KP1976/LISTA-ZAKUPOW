@@ -15,7 +15,6 @@ class Storage {
     } else {
       products = JSON.parse(localStorage.getItem('products'));
     }
-    console.log(products);
     return products;
   }
 }

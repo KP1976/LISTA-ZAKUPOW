@@ -63,42 +63,60 @@ const App = (_=> {
   
   function showSumPrice(totalPrice) {
     vars.summaryPriceContainer.classList.add('visible');
-    vars.summaryPrice.textContent = `${totalPrice.toFixed(2).toString().replace('.', ',')} zł`;
+    vars.summaryPrice.textContent = `${totalPrice.toFixed(2).replace('.', ',')} zł`;
   }
+  
+  function removeProduct(id) {
+    // Kliknięcie w przycisk usuń
+    vars.removeBtn.addEventListener('click', _=> {
+      const products = document.querySelectorAll('.list-product');
+      const cogs = document.querySelectorAll('.product-modify-btn');
 
-  function removeProduct(e) {
-    console.log(e.target);
-  }
+      cogs.forEach(cog => cog.classList.remove('disable-pointer-event'));
 
-  function removeProductByID(e) {
-    let id;
-    if(e.target.parentNode.parentNode.classList.contains('list-product')) {
-      id = e.target.parentNode.parentNode.dataset.id;
-    } else if(e.target.parentNode.parentNode.parentNode.classList.contains('list-product')) {
-      id = e.target.parentNode.parentNode.parentNode.dataset.id;
-    }
-    
-    console.log(Number(id));
+      products.forEach(product => {
+        if(product.getAttribute('data-id') === id) {
+          const price = parseFloat(document.querySelector(`[data-id="${id}"] .list-product-price`)
+          .textContent
+          .split(" ", 1)
+          .join()
+          .replace(',', '.'));
+          
+          data.totalPrice -= price;
+          let totalPrice = Number(data.totalPrice.toFixed(2));
+          
+          console.log(totalPrice);
 
-    data.products.filter(product => {
-      if(product.id === id) {
-        return product;
-      }
+          if(totalPrice !== 0) {
+            showSumPrice(totalPrice);
+          } else {
+            vars.summaryPriceContainer.classList.remove('visible');
+          }
+
+          document.querySelector(`[data-id="${id}"]`).remove();
+
+          if(document.querySelector('.list-product') === null) {
+            vars.containerDisplayProducts.classList.remove('visible', 'animated', 'rubberBand');
+          }
+        }
+      });
+      vars.buttons.classList.remove('show-buttons');
     });
   }
 
   function showButtons(e) {
-    if(e.target.parentNode.classList.contains('product-modify-btn') || 
-      e.target.parentNode.parentNode.classList.contains('product-modify-btn')) {
-      vars.buttons.classList.toggle('show-buttons');
+    if(e.target.classList.contains('product-modify-btn')) {
+      const cogs = document.querySelectorAll('.product-modify-btn');
+      const id = e.target.parentNode.dataset.id;
+      console.log(e.target.parentNode);
+
+      cogs.forEach(cog => cog.classList.add('disable-pointer-event'));
+      removeProduct(id);
+    
+      vars.buttons.classList.add('show-buttons');
+      e.target.firstChild.classList.add('fa-spin');
     }
-    removeProductByID(e);
   }
-  
-  // function modifyProduct(e) {
-  //   animCogStart(e);
-  //   vars.buttons.classList.add('show-buttons', 'animated', 'rubberBand');
-  // }
   
   function displayProductsFromLocalStorage(products) {
     products.forEach(product => {
@@ -108,26 +126,11 @@ const App = (_=> {
     showSumPrice(parseFloat(data.totalPrice.toFixed(2)));
   }
 
-  function animCogStart(e) {
-    if(e.target.classList.contains('product-modify-btn')) {
-      e.target.firstChild.classList.add('fa-spin');
-    }
-
-    if(e.target.parentNode.classList.contains('product-modify-btn')) {
-      e.target.parentNode.firstChild.classList.add('fa-spin');
-    }
-
-    if(e.target.parentNode.parentNode.classList.contains('product-modify-btn')) {
-      e.target.parentNode.parentNode.firstChild.classList.add('fa-spin');
-    }
-  }
-
   function init(_vars) {
     vars = _vars;
 
     displayProductsFromLocalStorage(data.products);
     vars.addBtn.addEventListener('click', addProduct);
-    vars.removeBtn.addEventListener('click', removeProduct);
     vars.containerDisplayProducts.addEventListener('click', showButtons);
   }
 

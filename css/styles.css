@@ -16,6 +16,10 @@ html, body {
   overflow: hidden;
 }
 
+svg, path {
+  pointer-events: none;
+}
+
 .whole-container {
   -webkit-box-align: center;
       -ms-flex-align: center;
@@ -174,6 +178,9 @@ html, body {
   font-size: 1.6rem;
   outline: none;
   padding: 0;
+}
+.product-modify-btn.disable-pointer-event {
+  pointer-events: none;
 }
 
 .summary-price-container {
@@ -409,6 +416,7 @@ html, body {
   outline: none;
   margin-bottom: 1rem;
   padding: 1rem;
+  width: 100%;
 }
 .product-input:focus {
   -webkit-box-shadow: 0 0 1px 1px var(--yellow);
