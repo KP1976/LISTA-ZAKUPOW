@@ -85,8 +85,6 @@ const App = (_=> {
           data.totalPrice -= price;
           let totalPrice = Number(data.totalPrice.toFixed(2));
           
-          console.log(totalPrice);
-
           if(totalPrice !== 0) {
             showSumPrice(totalPrice);
           } else {
@@ -101,7 +99,23 @@ const App = (_=> {
         }
       });
       vars.buttons.classList.remove('show-buttons');
+      console.log(data.products);
+      
+      Storage.removeProductFromLocalStorage(Number(id));
     });
+  }
+
+  function getBack() {
+    vars.getBackBtn.addEventListener('click', _=> {
+      const products = document.querySelectorAll('.list-product');
+      const cogs = document.querySelectorAll('.product-modify-btn');
+
+      cogs.forEach(cog => {
+        cog.classList.remove('disable-pointer-event');
+        cog.firstChild.classList.remove('fa-spin');
+      });
+      vars.buttons.classList.remove('show-buttons');
+    })
   }
 
   function showButtons(e) {
@@ -112,6 +126,7 @@ const App = (_=> {
 
       cogs.forEach(cog => cog.classList.add('disable-pointer-event'));
       removeProduct(id);
+      getBack();
     
       vars.buttons.classList.add('show-buttons');
       e.target.firstChild.classList.add('fa-spin');
@@ -119,11 +134,13 @@ const App = (_=> {
   }
   
   function displayProductsFromLocalStorage(products) {
-    products.forEach(product => {
-      showProduct(product);
-      data.totalPrice += parseFloat(product.productPrice); 
-    });
-    showSumPrice(parseFloat(data.totalPrice.toFixed(2)));
+    if (products.length !== 0) {
+      products.forEach(product => {
+        showProduct(product);
+        data.totalPrice += parseFloat(product.productPrice); 
+      });
+      showSumPrice(parseFloat(data.totalPrice.toFixed(2)));
+   }
   }
 
   function init(_vars) {

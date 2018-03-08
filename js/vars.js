@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     containerListProducts: this.querySelector('.container-list-products'),
     buttons: this.querySelector('.buttons'),
     removeBtn: this.querySelector('.btn-remove'),
+    getBackBtn: this.querySelector('.btn-back'),
     summaryPriceContainer: this.querySelector('.summary-price-container'),
     summaryPrice: this.querySelector('.summary-price')
   });
