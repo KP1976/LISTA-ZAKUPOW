@@ -38,7 +38,7 @@ const App = (_=> {
     if(data.products.length > 0) {
       id = data.products[data.products.length - 1].id + 1;
     } else {
-      id = 1;
+      id = 0;
     }
 
     newProduct = new Product(id, prodName, prodPrice);
@@ -65,72 +65,77 @@ const App = (_=> {
     vars.summaryPriceContainer.classList.add('visible');
     vars.summaryPrice.textContent = `${totalPrice.toFixed(2).replace('.', ',')} zł`;
   }
-  
-  function removeProduct(id) {
-    // Kliknięcie w przycisk usuń
-    vars.removeBtn.addEventListener('click', _=> {
-      const products = document.querySelectorAll('.list-product');
-      const cogs = document.querySelectorAll('.product-modify-btn');
 
-      cogs.forEach(cog => cog.classList.remove('disable-pointer-event'));
-
-      products.forEach(product => {
-        if(product.getAttribute('data-id') === id) {
-          const price = parseFloat(document.querySelector(`[data-id="${id}"] .list-product-price`)
-          .textContent
-          .split(" ", 1)
-          .join()
-          .replace(',', '.'));
-          
-          data.totalPrice -= price;
-          let totalPrice = Number(data.totalPrice.toFixed(2));
-          
-          if(totalPrice !== 0) {
-            showSumPrice(totalPrice);
-          } else {
-            vars.summaryPriceContainer.classList.remove('visible');
-          }
-
-          document.querySelector(`[data-id="${id}"]`).remove();
-
-          if(document.querySelector('.list-product') === null) {
-            vars.containerDisplayProducts.classList.remove('visible', 'animated', 'rubberBand');
-          }
-        }
-      });
-      vars.buttons.classList.remove('show-buttons');
-      console.log(data.products);
-      
-      Storage.removeProductFromLocalStorage(Number(id));
-    });
+  function enablePointerEvents() {
+    const cogs = document.querySelectorAll('.product-modify-btn');
+    cogs.forEach(cog => cog.classList.remove('disable-pointer-event'));
   }
 
-  function getBack() {
-    vars.getBackBtn.addEventListener('click', _=> {
-      const products = document.querySelectorAll('.list-product');
-      const cogs = document.querySelectorAll('.product-modify-btn');
+  function updateProducts() {
+    let html = '';
 
-      cogs.forEach(cog => {
-        cog.classList.remove('disable-pointer-event');
-        cog.firstChild.classList.remove('fa-spin');
-      });
-      vars.buttons.classList.remove('show-buttons');
-    })
+    // listProducts = [...listProducts];
+    data.products.forEach(product => {
+      html += `
+      <li class="list-product" data-id="${product.id}">
+        <span class="list-product-name">${product.productName}: </span>
+        <span class="list-product-price">${product.productPrice.replace('.', ',')} zł</span>
+        <button class="product-modify-btn"><i class="fas fa-cog"></i></button>
+      </li>
+      `;
+    });
+    
+    vars.containerListProducts.innerHTML = html;
+    enablePointerEvents();
+    vars.buttons.classList.remove('show-buttons');
+    vars.summaryPrice.textContent = `${data.totalPrice.replace('.', ',')} zł`;
+  }
+
+  function removeProduct() {
+    deleteCurrentProduct(data.currentProduct.id);
+
+    data.totalPrice -= data.currentProduct.productPrice; 
+    let totalPrice = data.totalPrice.toFixed(2);
+    data.totalPrice = totalPrice;
+
+    updateProducts();
+
+    if(data.totalPrice === '0.00') {
+      vars.containerDisplayProducts.classList.remove('visible', 'animated', 'rubberBand');
+      vars.summaryPriceContainer.classList.remove('visible');
+    }
+  }
+
+  function deleteCurrentProduct(id) {
+    const ids = data.products.map(product => product.id);
+    const index = ids.indexOf(id);
+
+    data.products.splice(index, 1);
   }
 
   function showButtons(e) {
     if(e.target.classList.contains('product-modify-btn')) {
-      const cogs = document.querySelectorAll('.product-modify-btn');
       const id = e.target.parentNode.dataset.id;
-      console.log(e.target.parentNode);
+      const cogs = document.querySelectorAll('.product-modify-btn');
 
       cogs.forEach(cog => cog.classList.add('disable-pointer-event'));
-      removeProduct(id);
-      getBack();
-    
       vars.buttons.classList.add('show-buttons');
       e.target.firstChild.classList.add('fa-spin');
+
+      const productToEdit = getProductById(id);
+      data.currentProduct = productToEdit;
     }
+  }
+
+  function getProductById(id) {
+    let foundProductById = null;
+
+    data.products.forEach(product => {
+      if(product.id === Number(id)) {
+        foundProductById = product;
+      }
+    });
+    return foundProductById;
   }
   
   function displayProductsFromLocalStorage(products) {
@@ -148,6 +153,7 @@ const App = (_=> {
 
     displayProductsFromLocalStorage(data.products);
     vars.addBtn.addEventListener('click', addProduct);
+    vars.removeBtn.addEventListener('click', removeProduct);
     vars.containerDisplayProducts.addEventListener('click', showButtons);
   }
 
