@@ -15,16 +15,14 @@ const App = (_=> {
 
   function addProduct() {
     const prodName = vars.productName.value;
-    const prodPrice = vars.productPrice.value;
+    const prodPrice = parseFloat(vars.productPrice.value).toFixed(2);
 
-    if(prodName !== '' || prodPrice !== '') {
+    if(prodName !== '' && prodPrice !== '' && !isNaN(prodPrice)) {
       const newProduct = createProduct(prodName, prodPrice);
-
-      data.totalPrice += Number(newProduct.productPrice);
+      console.log(prodPrice);
+      data.totalPrice += parseFloat(newProduct.productPrice);
       showProduct(newProduct);
       showSumPrice(data.totalPrice);
-      console.log(newProduct);
-      console.log(data.totalPrice);
       
       vars.productName.value = '';
       vars.productPrice.value = '';
@@ -32,7 +30,21 @@ const App = (_=> {
       Storage.addProductToLocalStorage(newProduct);
       
     } else {
-      alert('Wypełnij puste pola!!!');
+      vars.addBtn.classList.add('alert');
+      vars.addBtn.textContent = 'wypełnij puste pola!!!';
+      setTimeout(_=> {
+        vars.addBtn.classList.remove('alert');
+        vars.addBtn.textContent = 'dodaj';
+      }, 2000);
+    }
+
+    if(prodPrice < 0) {
+      vars.addBtn.classList.add('alert');
+      vars.addBtn.textContent = 'cena produktu musi być dodatnia!!!';
+      setTimeout(_=> {
+        vars.addBtn.classList.remove('alert');
+        vars.addBtn.textContent = 'dodaj';
+      }, 2000);
     }
   }
   
@@ -105,10 +117,15 @@ const App = (_=> {
     updateProducts();
     Storage.removeProductFromLocalStorage(data.currentProduct.id);
 
-    if(data.totalPrice === '0.00') {
+    if(data.totalPrice === 0) {
       vars.containerDisplayProducts.classList.remove('visible', 'animated', 'rubberBand');
       vars.summaryPriceContainer.classList.remove('visible');
     }
+
+    vars.addBtn.classList.add('visible');
+
+    vars.productName.value = '';
+    vars.productPrice.value = '';
   }
 
   function deleteCurrentProduct(id) {
@@ -118,17 +135,50 @@ const App = (_=> {
     data.products.splice(index, 1);
   }
 
+  function modifyProduct() {
+    const productName = vars.productName.value;
+    const productPrice = parseFloat(vars.productPrice.value).toFixed(2);
+    let tabOfTotalPrice;
+    
+    data.currentProduct.productName = productName;
+    data.currentProduct.productPrice = productPrice;
+   
+    updateProducts();
+    Storage.updateProductInLocalStorage(data.currentProduct);
+
+    vars.addBtn.classList.add('visible');
+
+    tabOfTotalPrice = data.products.map(product => {
+      return Number(product.productPrice);
+    });
+
+    data.totalPrice = tabOfTotalPrice.reduce((a, b) => {
+      return a + b;
+    });
+
+    vars.summaryPrice.textContent = `${data.totalPrice.toString().replace('.', ',')} zł`;
+
+    vars.productName.value = '';
+    vars.productPrice.value = '';
+  }
+
   function showButtons(e) {
     if(e.target.classList.contains('product-modify-btn')) {
       const id = e.target.parentNode.dataset.id;
       const cogs = document.querySelectorAll('.product-modify-btn');
-
+      
       cogs.forEach(cog => cog.classList.add('disable-pointer-event'));
+
       vars.buttons.classList.add('show-buttons');
       e.target.firstChild.classList.add('fa-spin');
-
+      
       const productToEdit = getProductById(id);
       data.currentProduct = productToEdit;
+      
+      vars.addBtn.classList.remove('visible');
+
+      vars.productName.value = data.currentProduct.productName;
+      vars.productPrice.value = data.currentProduct.productPrice;
     }
   }
 
@@ -147,8 +197,15 @@ const App = (_=> {
     const cogs = document.querySelectorAll('.product-modify-btn');
 
     vars.buttons.classList.remove('show-buttons');
+
     enablePointerEvents();
+
     cogs.forEach(cog => cog.firstChild.classList.remove('fa-spin'));
+
+    vars.addBtn.classList.add('visible');
+
+    vars.productName.value = '';
+    vars.productPrice.value = '';
   }
   
   function displayProductsFromLocalStorage(products) {
@@ -163,6 +220,7 @@ const App = (_=> {
 
   function clickEvents() {
     vars.addBtn.addEventListener('click', addProduct);
+    vars.modifyBtn.addEventListener('click', modifyProduct);
     vars.removeBtn.addEventListener('click', removeProduct);
     vars.getBackBtn.addEventListener('click', getBack);
     vars.containerDisplayProducts.addEventListener('click', showButtons);

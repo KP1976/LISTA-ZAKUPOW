@@ -34,4 +34,16 @@ class Storage {
     });
     localStorage.setItem('products', JSON.stringify(products));
   }
+
+  static updateProductInLocalStorage(updatedProduct) {
+    let products = JSON.parse(localStorage.getItem('products'));
+
+    products.forEach((product, index) => {
+      if(updatedProduct.id === product.id) {
+        products.splice(index, 1, updatedProduct);
+      }
+    });
+
+    localStorage.setItem('products', JSON.stringify(products));
+  }
 }

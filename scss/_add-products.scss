@@ -73,9 +73,23 @@
   }
 }
 
+.alert {
+  background: red;
+  border: 1px solid red;
+  color: #fff;
+  &:hover {
+    background-color: red;
+    color: #fff;
+  }
+}
+
 .btn-add {
+  display: none;
   @include mq(768px) {
     width: 95%;
+  }
+  &.visible {
+    display: block;
   }
 }
 
