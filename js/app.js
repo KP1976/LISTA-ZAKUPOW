@@ -1,4 +1,5 @@
 const App = (_=> {
+  // Klasa Product do tworzenia obiektów z identyfikatorem, nazwą i ceną produktu
   class Product {
     constructor(id, productName, productPrice) {
       this.id = id;
@@ -7,26 +8,35 @@ const App = (_=> {
     }
   }
 
+  // W zmiennej data przechowywany jest obiekt z danymi: produkty, obecny produkt, suma cen
   const data = {
     products: Storage.getProductsFromLocalStorage(),
     currentProduct: null,
     totalPrice: 0
   };
 
+  // Po wciśnięciu przycisku DODAJ odpalana jest poniższa funkcja
   function addProduct() {
     const prodName = vars.productName.value;
+    // String zamieniany jest na floata z dwoma cyframi po przecinku
     const prodPrice = parseFloat(vars.productPrice.value).toFixed(2);
 
+    // Sprawdzanie czy nie ma pustych inputów lub czy cena nie jest ujemna i wyświetlenie odpowiedniego komunikatu
     if(prodName !== '' && (prodPrice !== '' && prodPrice > 0) && !isNaN(prodPrice)) {
+      // Stworzenie nwego produktu
       const newProduct = createProduct(prodName, prodPrice);
-      console.log(prodPrice);
+
+      // Zapisanie w danych (data) całkowitej ceny produktów z zamianą stringa na float
       data.totalPrice += parseFloat(newProduct.productPrice);
+
+      // Utworzenie struktury html do wyświetlenia produktów i całkowitej ceny produktów
       showProduct(newProduct);
       showSumPrice(data.totalPrice);
       
-      vars.productName.value = '';
-      vars.productPrice.value = '';
-      
+      // Czyszczenie inputów po dodaniu produktu
+      clearInputs();
+       
+      // Zapisanie nowego produktu w LocalStorage
       Storage.addProductToLocalStorage(newProduct);
       
     } else {
@@ -102,30 +112,44 @@ const App = (_=> {
     });
     
     vars.containerListProducts.innerHTML = html;
+
+    // Włączenie obsługi zdarzeń dla przycisków edycji produktów (ikona zębatki)
     enablePointerEvents();
+
+    // Wyłączenie wyświetlania na stronie butonów (modyfikacja, skasuj, powrót)
     vars.buttons.classList.remove('show-buttons');
+
+    // Zapis całkowitej sumy produktów z zamianą kropki na przecinek i dodanie zł na końcu
     vars.summaryPrice.textContent = `${data.totalPrice.toString().replace('.', ',')} zł`;
   }
 
+  // Po wciśnięciu przycisku SKASUJ odpalana jest poniższa funkcja
   function removeProduct() {
+    // Kasowanie obecnego produktu o danym id
     deleteCurrentProduct(data.currentProduct.id);
 
+    // Odjęcie całkowitej sumy cen produktów od ceny produktu skasowanego
     data.totalPrice -= data.currentProduct.productPrice; 
     let totalPrice = data.totalPrice.toFixed(2);
     data.totalPrice = Number(totalPrice);
 
+    // Aktualizacja produktów w strukturze danych i w html
     updateProducts();
+
+    // Usunięcie produktu z LocalStorage
     Storage.removeProductFromLocalStorage(data.currentProduct.id);
 
+    // Jeżeli całkowita suma cen produktów będzie równa 0 to nie pokazuj sumy i ramki z produktami
     if(data.totalPrice === 0) {
       vars.containerDisplayProducts.classList.remove('visible', 'animated', 'rubberBand');
       vars.summaryPriceContainer.classList.remove('visible');
     }
 
+    // Pokaż przycisk DODAJ
     vars.addBtn.classList.add('visible');
 
-    vars.productName.value = '';
-    vars.productPrice.value = '';
+    // Czyszczenie inputów po dodaniu produktu
+    clearInputs();
   }
 
   function deleteCurrentProduct(id) {
@@ -135,48 +159,65 @@ const App = (_=> {
     data.products.splice(index, 1);
   }
 
+  // Po wciśnięciu przycisku MODYFIKUJ odpalana jest poniższa funkcja
   function modifyProduct() {
     const productName = vars.productName.value;
     const productPrice = parseFloat(vars.productPrice.value).toFixed(2);
     let tabOfTotalPrice;
     
+    // Do struktury danych zapisujemy zmienioną nazwę i cenę produktu pobrana z inputów
     data.currentProduct.productName = productName;
     data.currentProduct.productPrice = productPrice;
    
+    // Aktualizacja produktów w strukturze danych i w html
     updateProducts();
+
+    // Aktualizacja produktu w LocalStorage
     Storage.updateProductInLocalStorage(data.currentProduct);
 
+    // Pokaż przycisk DODAJ
     vars.addBtn.classList.add('visible');
 
+    // Utworzenie tablicy z cenami wszystkich produktów
     tabOfTotalPrice = data.products.map(product => {
       return Number(product.productPrice);
     });
 
+    // Aktualizacja całkowitej ceny produktów
     data.totalPrice = tabOfTotalPrice.reduce((a, b) => {
       return a + b;
     });
 
+    // Zapis całkowitej sumy produktów z zamianą kropki na przecinek i dodanie zł na końcu
     vars.summaryPrice.textContent = `${data.totalPrice.toString().replace('.', ',')} zł`;
 
-    vars.productName.value = '';
-    vars.productPrice.value = '';
+    // Czyszczenie inputów po dodaniu produktu
+    clearInputs();
   }
 
+  // Po wciśnięciu przycisku z ikoną zębatki odpalana jest poniższa funkcja
   function showButtons(e) {
     if(e.target.classList.contains('product-modify-btn')) {
+      // Pobranie id z atrybutu data-id
       const id = e.target.parentNode.dataset.id;
       const cogs = document.querySelectorAll('.product-modify-btn');
       
+      // Wyłączenie obsługi zdarzeń dla przycisków edycji produktów (ikona zębatki)
       cogs.forEach(cog => cog.classList.add('disable-pointer-event'));
-
+      
+      // Włączenie wyświetlania na stronie butonów (modyfikacja, skasuj, powrót)
       vars.buttons.classList.add('show-buttons');
+
+      // Włączenie animacji zębatki
       e.target.firstChild.classList.add('fa-spin');
       
       const productToEdit = getProductById(id);
       data.currentProduct = productToEdit;
       
+      // Ukryj przycisk DODAJ
       vars.addBtn.classList.remove('visible');
 
+      // Umieszczenie w inputach danych o nazwie i cenie produktu
       vars.productName.value = data.currentProduct.productName;
       vars.productPrice.value = data.currentProduct.productPrice;
     }
@@ -193,17 +234,27 @@ const App = (_=> {
     return foundProductById;
   }
 
+  // Po wciśnięciu przycisku POWRÓT odpalana jest poniższa funkcja
   function getBack(e) {
     const cogs = document.querySelectorAll('.product-modify-btn');
 
+    // Wyłączenie wyświetlania na stronie butonów (modyfikacja, skasuj, powrót)
     vars.buttons.classList.remove('show-buttons');
 
+    // Włączenie obsługi zdarzeń dla przycisków edycji produktów (ikona zębatki)
     enablePointerEvents();
 
+    // Wyłączenie animacji zębatek
     cogs.forEach(cog => cog.firstChild.classList.remove('fa-spin'));
 
+    // Pokaż przycisk DODAJ
     vars.addBtn.classList.add('visible');
 
+    // Czyszczenie inputów po dodaniu produktu
+    clearInputs();
+  }
+
+  function clearInputs() {
     vars.productName.value = '';
     vars.productPrice.value = '';
   }
@@ -214,7 +265,7 @@ const App = (_=> {
         showProduct(product);
         data.totalPrice += parseFloat(product.productPrice); 
       });
-      showSumPrice(parseFloat(data.totalPrice.toFixed(2)));
+    showSumPrice(parseFloat(data.totalPrice.toFixed(2)));
    }
   }
 

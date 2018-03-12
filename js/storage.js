@@ -1,8 +1,8 @@
 class Storage {
   static addProductToLocalStorage(newProduct) {
     let products;
+
     if(localStorage.getItem('products') === null) {
-      console.log(newProduct);
       products = [];
       products.push(newProduct);
       localStorage.setItem('products', JSON.stringify(products));
@@ -25,13 +25,15 @@ class Storage {
   }
 
   static removeProductFromLocalStorage(id) {
-    let products = Storage.getProductsFromLocalStorage();
+    // let products = Storage.getProductsFromLocalStorage();
+    let products = JSON.parse(localStorage.getItem('products'));
 
     products.forEach((product, index) => {
       if(product.id === id) {
         products.splice(index, 1);
       }
     });
+
     localStorage.setItem('products', JSON.stringify(products));
   }
 
