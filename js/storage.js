@@ -1,10 +1,16 @@
 class Storage {
-  constructor(product) {
-    this.product = product;
-  }
-
-  addProductToLocalStorage() {
-    localStorage.setItem('products', JSON.stringify(this.product));
+  static addProductToLocalStorage(newProduct) {
+    let products;
+    if(localStorage.getItem('products') === null) {
+      console.log(newProduct);
+      products = [];
+      products.push(newProduct);
+      localStorage.setItem('products', JSON.stringify(products));
+    } else {
+      products = JSON.parse(localStorage.getItem('products'));
+      products.push(newProduct);
+      localStorage.setItem('products', JSON.stringify(products));
+    }
   }
 
   static getProductsFromLocalStorage() {

@@ -20,48 +20,53 @@ const App = (_=> {
     if(prodName !== '' || prodPrice !== '') {
       const newProduct = createProduct(prodName, prodPrice);
 
-      data.totalPrice += parseFloat(newProduct.productPrice);
+      data.totalPrice += Number(newProduct.productPrice);
       showProduct(newProduct);
       showSumPrice(data.totalPrice);
-
+      console.log(newProduct);
+      console.log(data.totalPrice);
+      
       vars.productName.value = '';
       vars.productPrice.value = '';
-
-      products = new Storage(data.products);
-      products.addProductToLocalStorage();
+      
+      Storage.addProductToLocalStorage(newProduct);
+      
+    } else {
+      alert('Wypełnij puste pola!!!');
     }
   }
-
+  
   function createProduct(prodName, prodPrice) {
     let id;
-
+    
     if(data.products.length > 0) {
       id = data.products[data.products.length - 1].id + 1;
     } else {
       id = 0;
     }
-
+    
     newProduct = new Product(id, prodName, prodPrice);
     data.products.push(newProduct);
     return newProduct;
   }
-
+  
   function showProduct(newProduct) {
     const listProduct = document.createElement('li');
-
+    
     vars.containerDisplayProducts.classList.add('visible', 'animated', 'rubberBand');
     listProduct.classList.add('list-product');
     listProduct.setAttribute('data-id', `${newProduct.id}`);
     listProduct.innerHTML = `
-      <span class="list-product-name">${newProduct.productName}: </span>
-      <span class="list-product-price">${newProduct.productPrice.replace('.', ',')} zł</span>
-      <button class="product-modify-btn"><i class="fas fa-cog"></i></button>
+    <span class="list-product-name">${newProduct.productName}: </span>
+    <span class="list-product-price">${newProduct.productPrice.replace('.', ',')} zł</span>
+    <button class="product-modify-btn"><i class="fas fa-cog"></i></button>
     `;
-
+    
     vars.containerListProducts.appendChild(listProduct);
   }
   
   function showSumPrice(totalPrice) {
+    totalPrice = Number(totalPrice);
     vars.summaryPriceContainer.classList.add('visible');
     vars.summaryPrice.textContent = `${totalPrice.toFixed(2).replace('.', ',')} zł`;
   }
@@ -74,7 +79,6 @@ const App = (_=> {
   function updateProducts() {
     let html = '';
 
-    // listProducts = [...listProducts];
     data.products.forEach(product => {
       html += `
       <li class="list-product" data-id="${product.id}">
@@ -88,7 +92,7 @@ const App = (_=> {
     vars.containerListProducts.innerHTML = html;
     enablePointerEvents();
     vars.buttons.classList.remove('show-buttons');
-    vars.summaryPrice.textContent = `${data.totalPrice.replace('.', ',')} zł`;
+    vars.summaryPrice.textContent = `${data.totalPrice.toString().replace('.', ',')} zł`;
   }
 
   function removeProduct() {
@@ -96,9 +100,10 @@ const App = (_=> {
 
     data.totalPrice -= data.currentProduct.productPrice; 
     let totalPrice = data.totalPrice.toFixed(2);
-    data.totalPrice = totalPrice;
+    data.totalPrice = Number(totalPrice);
 
     updateProducts();
+    Storage.removeProductFromLocalStorage(data.currentProduct.id);
 
     if(data.totalPrice === '0.00') {
       vars.containerDisplayProducts.classList.remove('visible', 'animated', 'rubberBand');
@@ -137,6 +142,14 @@ const App = (_=> {
     });
     return foundProductById;
   }
+
+  function getBack(e) {
+    const cogs = document.querySelectorAll('.product-modify-btn');
+
+    vars.buttons.classList.remove('show-buttons');
+    enablePointerEvents();
+    cogs.forEach(cog => cog.firstChild.classList.remove('fa-spin'));
+  }
   
   function displayProductsFromLocalStorage(products) {
     if (products.length !== 0) {
@@ -148,13 +161,17 @@ const App = (_=> {
    }
   }
 
-  function init(_vars) {
-    vars = _vars;
-
-    displayProductsFromLocalStorage(data.products);
+  function clickEvents() {
     vars.addBtn.addEventListener('click', addProduct);
     vars.removeBtn.addEventListener('click', removeProduct);
+    vars.getBackBtn.addEventListener('click', getBack);
     vars.containerDisplayProducts.addEventListener('click', showButtons);
+  }
+
+  function init(_vars) {
+    vars = _vars;
+    displayProductsFromLocalStorage(data.products);
+    clickEvents();
   }
 
   return {
