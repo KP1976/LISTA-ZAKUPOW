@@ -17,7 +17,7 @@ const App = (_=> {
     const prodName = vars.productName.value;
     const prodPrice = parseFloat(vars.productPrice.value).toFixed(2);
 
-    if(prodName !== '' && prodPrice !== '' && !isNaN(prodPrice)) {
+    if(prodName !== '' && (prodPrice !== '' && prodPrice > 0) && !isNaN(prodPrice)) {
       const newProduct = createProduct(prodName, prodPrice);
       console.log(prodPrice);
       data.totalPrice += parseFloat(newProduct.productPrice);
@@ -38,7 +38,7 @@ const App = (_=> {
       }, 2000);
     }
 
-    if(prodPrice < 0) {
+    if(prodName !== '' && prodPrice < 0) {
       vars.addBtn.classList.add('alert');
       vars.addBtn.textContent = 'cena produktu musi być dodatnia!!!';
       setTimeout(_=> {
